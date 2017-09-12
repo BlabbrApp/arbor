@@ -42,6 +42,7 @@ defmodule Arbor.Tree do
     array_type = case primary_key_type do
       :binary_id -> "UUID"
       :id -> "integer"
+      :integer -> "bigint"
       _ -> "string"
     end
 
