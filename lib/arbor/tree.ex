@@ -70,19 +70,19 @@ defmodule Arbor.Tree do
 
       def parent(struct) do
         from t in unquote(definition),
-          where: fragment(unquote("#{opts[:primary_key]} = ?"), type(^struct.unquote(opts[:foreign_key]), unquote(opts[:foreign_key_type])))
+          where: fragment(unquote("#{opts[:primary_key]} = ?"), ^struct.unquote(opts[:foreign_key]))
       end
 
       def children(struct) do
         from t in unquote(definition),
-          where: fragment(unquote("#{opts[:foreign_key]} = ?"), type(^struct.unquote(opts[:primary_key]), unquote(opts[:foreign_key_type])))
+          where: fragment(unquote("#{opts[:foreign_key]} = ?"), ^struct.unquote(opts[:foreign_key]))
       end
 
       def siblings(struct) do
         from t in unquote(definition),
           where: t.unquote(opts[:primary_key]) != type(^struct.unquote(opts[:primary_key]), unquote(opts[:primary_key_type])),
           where: fragment(unquote("#{opts[:foreign_key]} = ?"),
-                          type(^struct.unquote(opts[:foreign_key]), unquote(opts[:foreign_key_type])))
+                          ^struct.unquote(opts[:foreign_key]))
       end
 
       def ancestors(struct) do
@@ -104,7 +104,7 @@ defmodule Arbor.Tree do
           )
           SELECT *
           FROM #{opts[:tree_name]}
-          """), type(^struct.unquote(opts[:primary_key]), unquote(opts[:primary_key_type]))),
+          """), ^struct.unquote(opts[:foreign_key])),
           on: t.unquote(opts[:primary_key]) == g.unquote(opts[:foreign_key])
       end
 
@@ -125,7 +125,7 @@ defmodule Arbor.Tree do
             WHERE #{opts[:tree_name]}.depth + 1 < ?
           )
           SELECT id FROM #{opts[:tree_name]}
-          """), type(^struct.unquote(opts[:primary_key]), unquote(opts[:foreign_key_type])), type(^depth, :integer))
+          """), ^struct.unquote(opts[:foreign_key]), type(^depth, :integer))
       end
     end
   end
